@@ -6,12 +6,20 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.room.Room
+import com.ranjan.malav.bukuwarung.data.AppDatabase
+import com.ranjan.malav.bukuwarung.data.DataRepository
 import com.ranjan.malav.bukuwarung.data.User
+import com.ranjan.malav.bukuwarung.data.UserDao
 import com.ranjan.malav.bukuwarung.ui.home.HomeViewModel
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,7 +42,10 @@ class MainActivity : AppCompatActivity() {
         val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         homeViewModel.getUsers().observe(this, Observer<List<User>> { users ->
             // Save data to room
-            users.forEach { user -> Log.d("MainAct", user.first_name) }
+            val db = AppDatabase.getDatabase(applicationContext)
+            Observable.just(db)
+                .subscribeOn(Schedulers.io())
+                .subscribe { db.userDao().insertAll(users) }
         })
     }
 }
