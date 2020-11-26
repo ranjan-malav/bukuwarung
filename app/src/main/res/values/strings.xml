@@ -2,4 +2,10 @@
     <string name="app_name">Bukuwarung</string>
     <string name="title_home">Home</string>
     <string name="title_profile">Profile</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email ID</string>
+    <string name="save">save</string>
+    <string name="profile_pic">profile pic</string>
+    <string name="add_pic">add pic</string>
 </resources>
