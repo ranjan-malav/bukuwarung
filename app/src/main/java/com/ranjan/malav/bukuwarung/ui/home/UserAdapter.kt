@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ranjan.malav.bukuwarung.R
 import com.ranjan.malav.bukuwarung.data.User
+import com.squareup.picasso.Picasso
 
 class UserAdapter(private val users: List<User>, private val onClick: (User) -> Unit) :
     RecyclerView.Adapter<UserAdapter.ViewHolder>() {
@@ -39,6 +40,7 @@ class UserAdapter(private val users: List<User>, private val onClick: (User) -> 
         val fullName = users[position].first_name + " " + users[position].first_name
         viewHolder.name.text = fullName
         viewHolder.email.text = users[position].email
+        Picasso.get().load(users[position].avatar).into(viewHolder.avatar)
 
         viewHolder.itemView.setOnClickListener {
             onClick(users[position])
