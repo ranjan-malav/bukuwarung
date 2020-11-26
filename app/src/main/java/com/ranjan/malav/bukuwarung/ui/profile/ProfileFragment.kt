@@ -7,6 +7,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +30,7 @@ class ProfileFragment : Fragment() {
 
     private lateinit var profileViewModel: ProfileViewModel
     val REQUEST_IMAGE_CAPTURE = 1
-    private lateinit var currentPhotoPath: String
+    private var currentPhotoPath: String = ""
     private lateinit var profilePic: ImageView
 
     override fun onCreateView(
@@ -60,15 +62,31 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        saveButton.setOnClickListener {
-            sharedPrefEditor?.also {
-                it.putString("user_first_name", firstName.editText?.text.toString())
-                it.putString("user_last_name", lastName.editText?.text.toString())
-                it.putString("user_email", email.editText?.text.toString())
-                it.putString("user_pic_uri", currentPhotoPath)
+        firstName.editText?.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s.toString().isNotEmpty()) {
+                    firstName.error = null
+                }
             }
-            sharedPrefEditor?.apply()
-            Toast.makeText(context, "Successfully saved", Toast.LENGTH_SHORT).show()
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        })
+
+        saveButton.setOnClickListener {
+            if (firstName.editText?.text.toString().isNotEmpty()) {
+                sharedPrefEditor?.also {
+                    it.putString("user_first_name", firstName.editText?.text.toString())
+                    it.putString("user_last_name", lastName.editText?.text.toString())
+                    it.putString("user_email", email.editText?.text.toString())
+                    it.putString("user_pic_uri", currentPhotoPath)
+                }
+                sharedPrefEditor?.apply()
+                Toast.makeText(context, "Successfully saved", Toast.LENGTH_SHORT).show()
+            } else {
+                firstName.error = "is required"
+            }
         }
 
         profilePic.setOnClickListener {
