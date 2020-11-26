@@ -1,5 +1,6 @@
 package com.ranjan.malav.bukuwarung.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ranjan.malav.bukuwarung.R
 import com.ranjan.malav.bukuwarung.data.AppDatabase
 import com.ranjan.malav.bukuwarung.data.User
+import com.ranjan.malav.bukuwarung.ui.user_detail.UserDetailActivity
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -34,13 +36,20 @@ class HomeFragment : Fragment() {
 
         homeViewModel.getUsers().observe(viewLifecycleOwner, Observer<List<User>> { users ->
             recyclerView.adapter = UserAdapter(users) { user -> adapterOnClick(user) }
-            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            recyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         })
 
         return root
     }
 
     private fun adapterOnClick(user: User) {
-        Log.d("HomeFrag", "selected user: ${user.email}")
+        val intent = Intent(activity, UserDetailActivity::class.java).apply {
+            putExtra(UserDetailActivity.Companion.USER_FIRST_NAME, user.first_name)
+            putExtra(UserDetailActivity.Companion.USER_LAST_NAME, user.last_name)
+            putExtra(UserDetailActivity.Companion.USER_EMAIL, user.email)
+            putExtra(UserDetailActivity.Companion.USER_AVATAR, user.avatar)
+        }
+        startActivity(intent)
     }
 }

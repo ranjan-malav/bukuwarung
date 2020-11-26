@@ -37,7 +37,7 @@ class UserAdapter(private val users: List<User>, private val onClick: (User) -> 
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val fullName = users[position].first_name + " " + users[position].first_name
+        val fullName = users[position].first_name + " " + users[position].last_name
         viewHolder.name.text = fullName
         viewHolder.email.text = users[position].email
         Picasso.get().load(users[position].avatar).into(viewHolder.avatar)
